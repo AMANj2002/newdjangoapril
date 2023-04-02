@@ -1,0 +1,91 @@
+﻿{% extends 'base.html' %}
+{% block title %} {{products.name}}{% endblock %}
+{% block content %}
+{% load product_tags %}
+{% load cart %}
+{% load custom_filter %}
+
+
+
+
+
+
+
+  <div class="container my-10">
+    <div class="row">
+    <div class="col-md-4">
+		<div class="row">
+			<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+				<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img src={{products.image.url}} class="d-block w-100" alt="...">
+				</div>
+				<div class="carousel-item">
+					<img src="{{products.image1.url}}" class="d-block w-100" alt="...">
+				</div>
+				<div class="carousel-item">
+					<img src="{{products.image2.url}}" class="d-block w-100" alt="...">
+				</div>
+				</div>
+				<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+			
+		</div>
+
+
+    <div class="col-md-8">
+        <p class="card-title"><b>{{products.name}}</b></p>
+						<p class="card-text"><b>NETT</b><b> ₹ {% call_sellprice products.price products.discount %}</b></p>
+                         <p class="card-text"><b>MRP </b><b>₹ {{products.price}}</b></p>
+						 <p class="card-text"><b>DISCOUNT: </b><b>{{products.discount}}%</b></p>
+						 <p class="card-text"><b>QTY: </b><b>{{products.qty}}</b></p>
+						
+    </div>
+	
+
+	<div class="card-footer p-0 no-gutters">
+
+		{% if products|is_in_cart:request.session.cart %}
+		<div class="row no-gutters">
+			<form action="/#{{products.id}}" class="col-2 " method="post">
+				{% csrf_token %}
+				<input hidden type="text" name='product' value='{{products.id}}'>
+				<input hidden type="text" name='remove' value='True'>
+				<input type="submit" value=" - " class="btn btn-block btn-light border-right">
+			</form>
+			<div class="text-center col">{{products|cart_quantity:request.session.cart}} in Cart</div>
+			<form action="/#{{products.id}}" class="col-2 " method="post">
+				{% csrf_token %}
+				<input hidden type="text" name='product' value='{{products.id}}'>
+				<input type="submit" value=" + " class="btn btn-block btn-light border-left">
+			</form>
+			
+		</div>
+		{% else %}
+		<form action="/#{{products.id}}" method="POST" class="btn-block">
+			{% csrf_token %}
+			<input hidden type="text" name='product' value='{{products.id}}'>
+			<input type="submit" class="float-right btn btn-light  form-control"
+				value="Add To Cart">
+		</form>
+		
+		{% endif %}
+
+    </div>
+	
+</div>
+
+</div>
+
+
+
+
+
+{% endblock %}
